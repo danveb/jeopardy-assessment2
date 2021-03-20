@@ -5,3 +5,31 @@
   #8d2ab5
   #74119c
 */
+
+th {
+  font-weight: bold;
+  font-size: 10pt;
+  text-transform: uppercase;
+  text-shadow: 2px black;
+  color: white;
+  background-color:#060ce9;
+  height: 4em;
+  width: 4em;
+  text-align: center;
+  border: solid white 1px;
+}
+
+td {
+  height: 8em;
+  width: 8em;
+  background-color: #060ce9;
+  word-wrap: normal;
+  color: white;
+  font-size: 10pt;
+  text-align: center;
+  border: solid white 1px;
+}
+
+td:hover {
+  cursor: pointer; 
+}
