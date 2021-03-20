@@ -18,15 +18,27 @@
 //    ...
 //  ]
 
-let categories = [];
+const NUM_CATEGORIES = 6 
+const NUM_CLUES_PER_CAT = 5; 
+const BASE_API_URL = 'https://jservice.io/api/'; 
 
+let categories = [];
+$('body').append('<button id="btn-restart">Restart</button>')
 
 /** Get NUM_CATEGORIES random category from API.
  *
  * Returns array of category ids
  */
 
-function getCategoryIds() {
+async function getCategoryIds() {
+    let response = await axios.get('https://jservice.io/api/categories?count=100'); 
+    // console.log(response.data); 
+    // for loop over categories
+    let ids = response.data.map((catId) => {
+        catId.id
+    }); 
+    // return (use lodash _.sampleSize(collectionSample, n))
+    return _.sampleSize(ids, NUM_CATEGORIES); 
 }
 
 /** Return object with data about a category:
@@ -41,7 +53,17 @@ function getCategoryIds() {
  *   ]
  */
 
-function getCategory(catId) {
+async function getCategory(catId) {
+    let response = await axios.get(`https://jservice.io/api/category?id=${catId}`); 
+    // console.log(response.data); 
+    let randomClues = _.sampleSize(response?.data?.cat?.clues, NUM_CLUES_PER_CAT); 
+    // for loop over 
+    let clues = randomClues.map((clue) => ({
+        question: clue.question, 
+        answer: clue.answer, 
+        showing: null, 
+    })); 
+    return { title: response?.data?.cat?.title, clues }; 
 }
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
@@ -53,6 +75,19 @@ function getCategory(catId) {
  */
 
 async function fillTable() {
+    // Make top 
+
+
+    // Make board
+    for(let y = 0; y < height; y++) {
+        const row = $(`<tr></tr>`)
+    }
+    for(let x = 0; x < width; x++) {
+        const cell = $(`<td></td>`);
+        cell.attr('id', `${y}-${x}`);
+        row.append(cell);
+    }
+    $('table').append(row); 
 }
 
 /** Handle clicking on a clue: show the question or answer.
@@ -64,6 +99,7 @@ async function fillTable() {
  * */
 
 function handleClick(evt) {
+
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -92,7 +128,12 @@ async function setupAndStart() {
 /** On click of start / restart button, set up game. */
 
 // TODO
+$('#btn-restart').on('click', setupAndStart); 
 
 /** On page load, add event handler for clicking clues */
 
 // TODO
+$(async function () {
+    setupAndStart(); 
+    $('#jeopardy').on('click', 'td', handleClick); 
+}); 
